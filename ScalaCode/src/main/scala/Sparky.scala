@@ -35,7 +35,7 @@ object Sparky{
         )
       }).persist() //persisting because points never move
 
-    val init_cnts = sc.textFile("src/main/resources/centroids")
+    var cent_positions = sc.textFile("src/main/resources/centroids")
       .map(line => {
         val tokens = line.split(", ")
         (
@@ -44,7 +44,7 @@ object Sparky{
         )
       }) // no persist because centroids do move
 
-    val cnt_pnts = init_pts.cartesian(init_cnts)
+    var cnt_pnts = init_pts.cartesian(cent_positions)
       .map(
         {case ((pid, pnt), (cid, cnt)) => (pid, (cid, DistanceSqr(pnt, cnt)))}
       )
@@ -55,22 +55,40 @@ object Sparky{
         case (pnt, (cnt, _)) => (cnt, pnt)//f"${pnt}%s, ${cnt}%s"
       })
 
-    val cent_positions = cnt_pnts.map({case (c, p) => (p, c)})
-      .join(init_pts)
-      .map({case (pid, (c, pos)) => (c, (1, pos))}) // 1 is for counting in next step:
-      .reduceByKey(
-        {case ((count1, p1), (count2, p2)) =>
-          (
-            count1+count2,
-            Point(p1.pos.zip(p2.pos).map(
-              {case (a, b) => a+b}
-            ))
-          )}
-      )
-      .mapValues(
-        {case (count, summed) => summed.pos.map(_/count)}
-      )
+    for (x <- (1 to 10)) {
+
+
+      cent_positions = cnt_pnts.map({case (c, p) => (p, c)})
+        .join(init_pts)
+        .map({case (pid, (c, pos)) => (c, (1, pos))}) // 1 is for counting in next step:
+        .reduceByKey(
+          {case ((count1, p1), (count2, p2)) =>
+            (
+              count1+count2,
+              Point(p1.pos.zip(p2.pos).map(
+                {case (a, b) => a+b}
+              ))
+            )}
+        )
+        .mapValues(
+          {case (count, summed) => Point(summed.pos.map(_/count))}
+        )
+
+
+      cnt_pnts = init_pts.cartesian(cent_positions)
+        .map(
+          {case ((pid, pnt), (cid, cnt)) => (pid, (cid, DistanceSqr(pnt, cnt)))}
+        )
+        .reduceByKey({
+          case ((cnt1, d1), (cnt2, d2)) => (if (d1 < d2) (cnt1, d1) else (cnt2, d2))
+        })
+        .map({
+          case (pnt, (cnt, _)) => (cnt, pnt)//f"${pnt}%s, ${cnt}%s"
+        })
+
+    }
     cnt_pnts.sortByKey(ascending = true, 1).saveAsTextFile("output/labels")
     cent_positions.sortByKey(ascending = true, 1).saveAsTextFile("output/centroids")
   }
 }
+
