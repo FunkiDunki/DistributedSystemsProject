@@ -55,6 +55,22 @@ object Sparky{
         case (pnt, (cnt, _)) => (cnt, pnt)//f"${pnt}%s, ${cnt}%s"
       })
 
+    val cent_positions = cnt_pnts.map({case (c, p) => (p, c)})
+      .join(init_pts)
+      .map({case (pid, (c, pos)) => (c, (1, pos))}) // 1 is for counting in next step:
+      .reduceByKey(
+        {case ((count1, p1), (count2, p2)) =>
+          (
+            count1+count2,
+            Point(p1.pos.zip(p2.pos).map(
+              {case (a, b) => a+b}
+            ))
+          )}
+      )
+      .mapValues(
+        {case (count, summed) => summed.pos.map(_/count)}
+      )
     cnt_pnts.sortByKey(ascending = true, 1).saveAsTextFile("output/labels")
+    cent_positions.sortByKey(ascending = true, 1).saveAsTextFile("output/centroids")
   }
 }
