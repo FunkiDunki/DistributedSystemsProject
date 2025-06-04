@@ -1,1 +1,3 @@
 Describe your code roughly
+
+dta_to_csv.py == Script to convert Stata .dta files to plain text .csv files compatable with Scala
