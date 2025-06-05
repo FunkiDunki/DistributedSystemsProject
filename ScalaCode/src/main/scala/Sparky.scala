@@ -26,23 +26,41 @@ object Sparky{
       }).sum
     }
 
-    val init_pts = sc.textFile("src/main/resources/datapoints")
+    val sample_size = 100
+    val k = 3
+    val init_pts = sc.textFile(f"../Data/features_std_sample_${sample_size}.csv")
       .map(line => {
-        val tokens = line.split(", ")
+        line.split(",")
+      })
+      .filter(
+        {tokens => tokens.head != ""}
+      )
+      .map(tokens => {
         (
           tokens.head,
-          Point(tokens.tail.map(_.toDouble).toList)
+          Point(List(tokens(4).toDouble, tokens(5).toDouble))
         )
-      }).persist() //persisting because points never move
+      })
+      .persist() //persisting because points never move
+    //example point
+    println(init_pts.collect().head)
 
-    var cent_positions = sc.textFile("src/main/resources/centroids")
+    //val init_pts = sc.textFile("src/main/resources/datapoints")
+
+    var cent_positions = sc.textFile(s"../Data/features_std_k${k}.csv")
       .map(line => {
-        val tokens = line.split(", ")
+        line.split(",")
+      })
+      .filter(
+        {tokens => tokens.head != ""}
+      )
+      .map(tokens => {
         (
-          tokens.head.trim,
-          Point(tokens.tail.map(_.toDouble).toList)
+          tokens.head,
+          Point(List(tokens(4).toDouble, tokens(5).toDouble))
         )
-      }) // no persist because centroids do move
+      })
+      .persist() //persisting because points never move
 
     var cnt_pnts = init_pts.cartesian(cent_positions)
       .map(
@@ -87,8 +105,8 @@ object Sparky{
         })
 
     }
-    cnt_pnts.sortByKey(ascending = true, 1).saveAsTextFile("output/labels")
-    cent_positions.sortByKey(ascending = true, 1).saveAsTextFile("output/centroids")
+    cnt_pnts.sortByKey(ascending = true, 1).saveAsTextFile(f"output/labels_k${k}_sample${sample_size}")
+    cent_positions.sortByKey(ascending = true, 1).saveAsTextFile(f"output/centroids_k${k}_sample${sample_size}")
   }
 }
 
