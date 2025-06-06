@@ -4,3 +4,9 @@ Nicholas Hotelling:
 - Normalized data and took static samples to be used by both algorithms: Approx 1 hour
 - Managed Github issues and PRs: Approx 1 hour
 Total: 6 hours
+
+Alexander Nunn:
+- Did preliminary research on data: Approx 30 mins
+- Wrote full report, checking in with all group members to understand what each one did: 3 hours
+- Organized project presentation - 1.5 hours
+Total: 5 hours
