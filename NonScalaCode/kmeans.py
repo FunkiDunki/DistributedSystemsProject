@@ -7,8 +7,10 @@ outputDir = "finalClusters"
 os.makedirs(outputDir, exist_ok=True)
 
 # Assuming a csv file where each line is a centroid with n dimensions
-centroids = np.genfromtxt('centroids.csv', delimiter=',')
-data = np.genfromtxt('data.csv', delimiter=',')
+centroids = np.genfromtxt('ke_centroids.csv', delimiter=',', skip_header=1)[:, 1:]
+data = np.genfromtxt('k3_test.csv', delimiter=',', skip_header=1)[:, 1:]
+
+
 
 # Create a list of length k for each centroid
 clusters = [[] for _ in range(centroids.shape[0])]
@@ -65,5 +67,7 @@ for i, c in enumerate(clusters):
 
 for i, cent in enumerate(centroids):
 
-    print(f"Cluster {i}: {cent}")
+    #,{int(cent[2])},{cent[3]:.6f},{int(cent[4])}
+
+    print(f"{cent[0]:.6f},{cent[1]:.6f}")
 

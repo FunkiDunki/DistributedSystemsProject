@@ -10,3 +10,9 @@ Alexander Nunn:
 - Wrote full report, checking in with all group members to understand what each one did: 3 hours
 - Organized project presentation - 1.5 hours
 Total: 5 hours
+
+Ethan Trantalis
+- Setup Python Kmeans script (3 hrs for research and scripting)
+- Tested with a variety of different k values (1 hr)
+- Tested with normalized qualitative data (1 hr)
+Total 5 hrs
