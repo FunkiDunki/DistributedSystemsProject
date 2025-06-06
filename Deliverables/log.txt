@@ -1,0 +1,6 @@
+Nicholas Hotelling:
+- Set up Scala and Spark environment and Github Repo: Approx 1 hour
+- Wrote K Means in Scala: Approx 3 hours
+- Normalized data and took static samples to be used by both algorithms: Approx 1 hour
+- Managed Github issues and PRs: Approx 1 hour
+Total: 6 hours
