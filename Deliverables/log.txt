@@ -16,3 +16,8 @@ Ethan Trantalis
 - Tested with a variety of different k values (1 hr)
 - Tested with normalized qualitative data (1 hr)
 Total 5 hrs
+
+Justin Kopcinski
+- Database Selection: 30mins
+- Database Cleaning / Feature Selection: 5 hours
+Total: 5.5 hours
